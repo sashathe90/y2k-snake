@@ -2,6 +2,19 @@
 import Foundation
 
 enum LeaderboardManager {
+    private static func normalized(_ list: [ScoreEntry]) -> [ScoreEntry] {
+        var seenEntries = Set<String>()
+
+        return list
+            .sorted { $0.score > $1.score }
+            .filter { entry in
+                let key = "\(entry.playerName.uppercased())|\(entry.score)"
+                guard !seenEntries.contains(key) else { return false }
+                seenEntries.insert(key)
+                return true
+            }
+    }
+
     static func key(for mode: GameMode, speed: Int?) -> String {
         switch mode {
         case .classic:
@@ -21,12 +34,13 @@ enum LeaderboardManager {
               let decoded = try? JSONDecoder().decode([ScoreEntry].self, from: data) else {
             return []
         }
-        return decoded
+        return Array(normalized(decoded).prefix(5))
     }
     
     static func save(_ list: [ScoreEntry], for mode: GameMode, speed: Int?) {
         let key = key(for: mode, speed: speed)
-        if let data = try? JSONEncoder().encode(list) {
+        let normalizedList = Array(normalized(list).prefix(5))
+        if let data = try? JSONEncoder().encode(normalizedList) {
             UserDefaults.standard.set(data, forKey: key)
         }
     }

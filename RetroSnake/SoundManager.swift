@@ -265,6 +265,32 @@ final class SoundManager {
         menuMusicPlayer.currentTime = 0
     }
 
+    func pauseAllAudioForAppLifecycle() {
+        stopMenuMusic()
+        sfxPoolLock.lock()
+        for index in sfxPlayerNodeBusy.indices {
+            sfxPlayerNodeGeneration[index] += 1
+            sfxPlayerNodeBusy[index] = false
+        }
+        sfxPoolLock.unlock()
+
+        for playerNode in sfxPlayerNodes {
+            if playerNode.isPlaying {
+                playerNode.stop()
+            }
+        }
+    }
+
+    func resumeAudioForAppLifecycle() {
+        guard isSoundEnabled else {
+            stopMenuMusic()
+            return
+        }
+
+        startAudioEngineIfNeeded()
+        playMenuMusic()
+    }
+
     @discardableResult
     private func playEngineSFX(_ soundName: String) -> Bool {
         guard isSoundEnabled else { return false }

@@ -24,6 +24,8 @@ enum ControlLayout: String, CaseIterable {
 
 enum SkinsReturnContext {
     case firstLaunchPlayerCreation
+    case newPlayerSelection
+    case newVSPlayerSelection
     case playerSelection
     case vsPlayerSelection
     case settings
@@ -54,6 +56,12 @@ enum AIDifficulty: String {
     case hard = "HARD"
 }
 
+enum MultiplayerVSResult {
+    case playerWins
+    case aiWins
+    case draw
+}
+
 enum GameScreen {
     case playerSelection
     case playerManagement
@@ -65,7 +73,9 @@ enum GameScreen {
     case multiplayerMenu
     case multiplayerVSMainMenu
     case multiplayerVSModeSelection
+    case multiplayerVSSpeedSelection
     case multiplayerVSAIDifficultySelection
+    case multiplayerVSResult
     case multiplayerVSScores
     case multiplayerVSScoresSpeedSelection
     case multiplayerVSScoresDifficultySelection
@@ -75,6 +85,7 @@ enum GameScreen {
     case scoresMenu
     case settingsMenu
     case skinsMenu
+    case onboardingControl
     case soundMenu
     case credits
     case controlMenu
